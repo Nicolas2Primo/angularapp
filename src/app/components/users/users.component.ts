@@ -11,9 +11,7 @@ export class UsersComponent implements OnInit {
   showExtended: boolean = true;
   loaded: boolean = false;
 
-  constructor() {
-    console.log(this.users);
-  }
+  constructor() {}
 
   ngOnInit(): void {
     this.users = [
@@ -50,6 +48,10 @@ export class UsersComponent implements OnInit {
     ];
 
     this.loaded = true;
+    this.addUser({
+      firstName: 'Igor',
+      lastName: 'Feitosa',
+    });
   }
 
   addUser(user: User) {

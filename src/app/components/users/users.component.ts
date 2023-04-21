@@ -7,11 +7,23 @@ import { User } from '../../models/User';
   styleUrls: ['./users.component.css'],
 })
 export class UsersComponent implements OnInit {
+  user: User = {
+    firstName: '',
+    lastName: '',
+    age: undefined,
+    address: {
+      street: '',
+      city: '',
+      state: '',
+    },
+  };
   users: User[] = [];
   showExtended: boolean = true;
+  showUserForm: boolean = false;
   loaded: boolean = false;
-  enableAdd: boolean = true;
+  enableAdd: boolean = false;
   currentClasses = {};
+  currentStyles = {};
 
   constructor() {}
 
@@ -26,8 +38,9 @@ export class UsersComponent implements OnInit {
           city: 'Boston',
           state: 'MA',
         },
-        image: 'https://picsum.photos/600?random=4',
         isActive: true,
+        registered: new Date('01/02/2018 08:30:00'),
+        hide: true,
       },
       {
         firstName: 'Nicolas',
@@ -38,8 +51,9 @@ export class UsersComponent implements OnInit {
           city: 'Boston',
           state: 'MA',
         },
-        image: 'https://picsum.photos/600?random=5',
         isActive: false,
+        registered: new Date('01/02/2017 12:21:43'),
+        hide: true,
       },
       {
         firstName: 'Willian',
@@ -50,28 +64,40 @@ export class UsersComponent implements OnInit {
           city: 'Fortaleza',
           state: 'CE',
         },
-        image: 'https://picsum.photos/600?random=2',
         isActive: true,
+        registered: new Date('01/02/2021 14:45:00'),
+        hide: true,
       },
     ];
 
     this.loaded = true;
-    /* this.addUser({
-      firstName: 'Igor',
-      lastName: 'Feitosa',
-    }); */
-
-    this.setCurrentClasses();
   }
 
-  addUser(user: User) {
-    this.users.push(user);
-  }
+  addUser() {
+    this.user.isActive = true;
+    this.user.registered = new Date();
+    this.users.unshift(this.user);
 
-  setCurrentClasses() {
-    this.currentClasses = {
-      'btn-success': this.enableAdd,
-      'big-text': this.showExtended,
+    this.user = {
+      firstName: '',
+      lastName: '',
+      age: undefined,
+      address: {
+        street: '',
+        city: '',
+        state: '',
+      },
     };
+  }
+
+  onSubmit(e: any) {
+    console.log(123);
+
+    e.preventDefault();
+  }
+
+  fireEvent(e: any) {
+    console.log(e.target.value);
+    console.log(e.type);
   }
 }

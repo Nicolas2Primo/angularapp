@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/Forms';
 import { User } from '../../models/User';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-users',
@@ -10,12 +12,7 @@ export class UsersComponent implements OnInit {
   user: User = {
     firstName: '',
     lastName: '',
-    age: undefined,
-    address: {
-      street: '',
-      city: '',
-      state: '',
-    },
+    email: '',
   };
   users: User[] = [];
   showExtended: boolean = true;
@@ -24,53 +21,20 @@ export class UsersComponent implements OnInit {
   enableAdd: boolean = false;
   currentClasses = {};
   currentStyles = {};
+  @ViewChild('userForm', { static: false }) form: any;
+  data: any;
 
-  constructor() {}
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.users = [
-      {
-        firstName: 'Maria',
-        lastName: 'Leticia',
-        age: 21,
-        address: {
-          street: '50 Main st',
-          city: 'Boston',
-          state: 'MA',
-        },
-        isActive: true,
-        registered: new Date('01/02/2018 08:30:00'),
-        hide: true,
-      },
-      {
-        firstName: 'Nicolas',
-        lastName: 'Primo',
-        age: 20,
-        address: {
-          street: '50 Main st',
-          city: 'Boston',
-          state: 'MA',
-        },
-        isActive: false,
-        registered: new Date('01/02/2017 12:21:43'),
-        hide: true,
-      },
-      {
-        firstName: 'Willian',
-        lastName: 'Fialho',
-        age: 19,
-        address: {
-          street: 'Oliveira paiva',
-          city: 'Fortaleza',
-          state: 'CE',
-        },
-        isActive: true,
-        registered: new Date('01/02/2021 14:45:00'),
-        hide: true,
-      },
-    ];
+    this.userService.getData().subscribe((data) => {
+      console.log(data);
+    });
 
-    this.loaded = true;
+    this.userService.getUsers().subscribe((users) => {
+      this.users = users;
+      this.loaded = true;
+    });
   }
 
   addUser() {
@@ -81,23 +45,20 @@ export class UsersComponent implements OnInit {
     this.user = {
       firstName: '',
       lastName: '',
-      age: undefined,
-      address: {
-        street: '',
-        city: '',
-        state: '',
-      },
+      email: '',
     };
   }
 
-  onSubmit(e: any) {
-    console.log(123);
+  onSubmit({ value, valid }: NgForm) {
+    if (!valid) {
+      console.log('Form is not valid');
+    } else {
+      value.isActive = true;
+      value.registered = new Date();
+      value.hide = true;
+      this.userService.addUser(value);
 
-    e.preventDefault();
-  }
-
-  fireEvent(e: any) {
-    console.log(e.target.value);
-    console.log(e.type);
+      this.form.reset();
+    }
   }
 }
